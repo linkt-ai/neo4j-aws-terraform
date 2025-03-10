@@ -28,9 +28,9 @@ output "node_count" {
   value = var.node_count
 }
 
-output "vpc_base_cidr" {
-  value = var.vpc_base_cidr
-}
+# output "vpc_base_cidr" {
+#   value = var.vpc_base_cidr
+# }
 
 output "install_gds" {
   value = var.install_gds

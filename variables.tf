@@ -14,6 +14,26 @@ locals {
   })
 }
 
+variable "vpc_id" {
+  description = "The VPC ID"
+  type        = string
+}
+
+variable "public_subnet_ids" {
+  description = "The IDs of the public subnets"
+  type        = list(string)
+}
+
+variable "private_subnet_ids" {
+  description = "The IDs of the private subnets"
+  type        = list(string)
+}
+
+variable "key_pair_name" {
+  description = "The name of the key pair"
+  type        = string
+}
+
 variable "vpc_base_cidr" {
   description = "The base of the address range to be used by the VPC and corresponding Subnets"
   type        = string

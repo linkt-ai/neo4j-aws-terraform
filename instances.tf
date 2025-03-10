@@ -1,11 +1,16 @@
+locals {
+    ubuntu_2404_x86_ami = "ami-0cb91c7de36eed2cb"
+}
+
 resource "aws_instance" "neo4j_instance" {
   count = var.node_count
-  ami   = var.neo4j-ami-list["${var.neo4j_version}"]["${var.target_region}"]
+
+  ami   = local.ubuntu_2404_x86_ami
 
   instance_type = var.instance_type
-  key_name      = aws_key_pair.neo4j_ec2_key.id
+  key_name      = var.key_pair_name
 
-  subnet_id = element(aws_subnet.neo4j_public_subnet.*.id, count.index % 3)
+  subnet_id = element(var.private_subnet_ids, count.index % 3)
   vpc_security_group_ids = ["${aws_security_group.neo4j_sg.id}"]
   iam_instance_profile = aws_iam_instance_profile.neo4j_instance_profile.name
   depends_on           = [aws_lb.neo4j_lb]
@@ -13,23 +18,12 @@ resource "aws_instance" "neo4j_instance" {
   user_data = templatefile(
     "${path.module}/neo4j.tftpl",
     {
-      install_gds    = var.install_gds
-      install_bloom  = var.install_bloom
-      gds_key        = var.gds_key
-      bloom_key      = var.bloom_key
       neo4j_password = var.neo4j_password
-      install_apoc   = var.install_apoc
-      node_count     = var.node_count
-      lb_fqdn        = aws_lb.neo4j_lb.dns_name
-      lb_arn         = aws_lb.neo4j_lb.arn
-      neo4j_version  = var.neo4j_version
-      target_region  = var.target_region
-      env_prefix     = var.env_prefix
     }
   )
 
   tags = {
-    "Name"      = "${var.env_prefix}-instance"
+    "Name"      = "${var.env_prefix}-neo4j-${count.index}"
     "Terraform" = true
   }
 
