@@ -4,6 +4,10 @@ output "ssh_commands" {
   ]
 }
 
+output "neo4j_bolt_url" {
+  value = "bolt://${aws_lb.neo4j_lb.dns_name}:7687"
+}
+
 output "neo4j_browser_url" {
   value = "http://${aws_lb.neo4j_lb.dns_name}:7474"
 }
