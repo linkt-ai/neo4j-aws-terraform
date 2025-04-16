@@ -1,5 +1,5 @@
 resource "aws_iam_role" "neo4j_ec2_role" {
-  name = "${var.env_prefix}-role"
+  name               = "${var.env_prefix}-role"
   assume_role_policy = local.assume_role_policy
 }
 
@@ -19,7 +19,7 @@ resource "aws_iam_role_policy_attachment" "neo4j_nlb_tagging_policy" {
 }
 
 resource "aws_iam_policy" "neo4j_nlb_tagging_policy" {
-  name        = "neo4j_nlb_tagging_policy"
+  name        = "${var.env_prefix}-nlb-tagging-policy"
   description = "Policy for tagging Network Load Balancer"
   policy      = data.aws_iam_policy_document.neo4j_nlb_tagging_policy_document.json
 }
